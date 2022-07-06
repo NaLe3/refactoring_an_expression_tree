@@ -1,4 +1,13 @@
 class Node
+
+  @@operator_map = 
+    {
+      "x" => :*,
+      "÷" => :/,
+      "-" => :-,
+      "+" => :+
+    }
+    
   def initialize(data, left, right)
     @data = data
     @left = left
@@ -7,30 +16,12 @@ class Node
 
   def result
     return @data.to_f if @data.is_a?(Integer) 
-    case @data
-    when "x"
-      @left.result * @right.result
-    when "÷"
-      @left.result / @right.result
-    when "+"
-      @left.result + @right.result
-    when "-"
-      @left.result - @right.result
-    end
+    @left.result.send(@@operator_map[@data], @right.result)
   end
 
   def to_s
     return @data.to_s if @data.is_a?(Integer) 
-    case @data
-    when "x"
-      "(#{@left.to_s} x #{@right.to_s})"
-    when "÷"
-      "(#{@left.to_s} ÷ #{@right.to_s})"
-    when "+"
-      "(#{@left.to_s} + #{@right.to_s})"
-    when "-"
-      "(#{@left.to_s} - #{@right.to_s})"
-    end
+    "(#{@left.to_s} #{@data} #{@right.to_s})"
   end
 end
 
