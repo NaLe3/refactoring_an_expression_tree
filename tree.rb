@@ -1,46 +1,47 @@
 class Node
 
-  @@operator_map = 
+  @@operators_map = 
     {
       "x" => :*,
       "÷" => :/,
       "-" => :-,
       "+" => :+
     }
-    
-  def initialize(data, left, right)
-    @data = data
+
+  def initialize(operator, left, right)
+    @operator  = operator 
     @left = left
     @right = right
   end
 
   def result
-    return @data.to_f if @data.is_a?(Integer) 
-    @left.result.send(@@operator_map[@data], @right.result)
+    left = @left.is_a?(Integer) ? @left: @left.result 
+    right = @right.is_a?(Integer) ? @right: @right.result 
+    left.send(@@operators_map[@operator], right)
   end
 
   def to_s
-    return @data.to_s if @data.is_a?(Integer) 
-    "(#{@left.to_s} #{@data} #{@right.to_s})"
+    "(#{@left.to_s} #{@operator} #{@right.to_s})"
   end
 end
 
 tree = 
   Node.new(
-    "÷",
+    "÷", 
     Node.new(
       "+",
-      Node.new(7, nil, nil),
+      7,
       Node.new(
         "x",
-        Node.new("-",
-          Node.new(3, nil, nil),
-          Node.new(2, nil, nil)
+        Node.new(
+          "-",
+          3,
+          2
         ),
-        Node.new(5, nil, nil)
-      )
-    ),
-    Node.new(6, nil, nil)
+        5
+      ),
+    ), 
+    6
   )
 
 def assert_equal(expected, actual)
